@@ -42,6 +42,11 @@ int main(){
             if(sArq4 == "*"){
                 cls = new Cliente::ClienteNormal();
 
+                //sArq1 = nome
+                //sArq2 = emprestimo
+                //sArq3 = Prazo
+                //sArq4 = *
+
                 emp.setNomes(sArq1);
                 emp.setLivros(sArq2);
                 emp.setPrazo(stoi(sArq3));
@@ -52,11 +57,16 @@ int main(){
             }else{
                 cls = new Cliente::ClienteVip();
 
-                emp = Emprestimo(sArq2, sArq1);
-                cls->AdicionaEmprestimo(emp, stoi(sArq4));
+                //sArq1 = nome
+                //sArq2 = emprestimos[0]
+                //sArq3 = Prazo
+                //sArq4 = emprestimos[1]
 
-                emp = Emprestimo(sArq3, sArq1);
-                cls->AdicionaEmprestimo(emp, stoi(sArq4));
+                emp = Emprestimo(sArq2, sArq1);
+                cls->AdicionaEmprestimo(emp, stoi(sArq3));
+
+                emp = Emprestimo(sArq4, sArq1);
+                cls->AdicionaEmprestimo(emp, stoi(sArq3));
 
                 cl.push_back(cls);
             }
@@ -279,8 +289,9 @@ int main(){
                     if(cl[i]->getVip() == true){
                         arq << cl[i]->getEmp(1).getNomes() + "\n";
                         arq << cl[i]->getEmp(1).getLivros() + "\n";
-                        arq << cl[i]->getEmp(2).getLivros() + "\n";
                         arq << std::to_string(cl[i]->getEmp(1).getPrazo()) + "\n";
+                        arq << cl[i]->getEmp(2).getLivros() + "\n";
+
 
                     }
                 }
