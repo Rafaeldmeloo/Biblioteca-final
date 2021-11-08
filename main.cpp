@@ -16,6 +16,7 @@ int main(){
     std::fstream arq;
     Controle ctl;
     std::string livros, nomes, datas;
+    std::string sArq1, sArq2, sArq3, sArq4;
     Emprestimo emp;
     std::vector<Clientes*> cl;
     Clientes *cls;
@@ -31,42 +32,38 @@ int main(){
 
     arq.open("EmprestimoNormal.txt", std::ios::in);
 
-    do{
-        std::getline(arq, nomes);
-        if(nomes != "*"){
-            cls = new Cliente::ClienteVip();
-
-            std::getline(arq, livros);
-            emp = Emprestimo(livros, nomes);
-            cls->AdicionaEmprestimo(emp,PRAZO_VIP);
-
-            std::getline(arq, livros);
-            emp = Emprestimo(livros, nomes);
-            std::getline(arq, datas);
-
-            cls->AdicionaEmprestimo(emp, stoi(datas));
-
-            cl.push_back(cls);
-        }
-    }while(nomes != "*");
 
     while(!arq.eof()){
-        std::getline(arq, nomes);
-        if(nomes != ""){
-            std::getline(arq, livros);
-            std::getline(arq, datas);
+        std::getline(arq, sArq1);
+        if(sArq1 != ""){
+            std::getline(arq, sArq2);
+            std::getline(arq, sArq3);
+            std::getline(arq, sArq4);
+            if(sArq4 == "*"){
+                cls = new Cliente::ClienteNormal();
 
-            emp.setNomes(nomes);
-            emp.setLivros(livros);
-            emp.setPrazo(stoi(datas));
+                emp.setNomes(sArq1);
+                emp.setLivros(sArq2);
+                emp.setPrazo(stoi(sArq3));
 
-            cls = new Cliente::ClienteNormal();
+                cls->AdicionaEmprestimo(emp, PRAZO_VIP);
 
-            cls->AdicionaEmprestimo(emp, PRAZO_VIP);
+                cl.push_back(cls);
+            }else{
+                cls = new Cliente::ClienteVip();
 
-            cl.push_back(cls);
+                emp = Emprestimo(sArq2, sArq1);
+                cls->AdicionaEmprestimo(emp, stoi(sArq4));
+
+                emp = Emprestimo(sArq3, sArq1);
+                cls->AdicionaEmprestimo(emp, stoi(sArq4));
+
+                cl.push_back(cls);
+            }
         }
     }
+
+
 
 
     arq.close();
@@ -284,15 +281,16 @@ int main(){
                         arq << cl[i]->getEmp(1).getLivros() + "\n";
                         arq << cl[i]->getEmp(2).getLivros() + "\n";
                         arq << std::to_string(cl[i]->getEmp(1).getPrazo()) + "\n";
+
                     }
                 }
-                arq << "*\n";
 
                 for(int i = 0; i < cl.size(); i++){
                     if(cl[i]->getVip() == false){
                         arq << cl[i]->getEmp(1).getNomes() + "\n";
                         arq << cl[i]->getEmp(1).getLivros() + "\n";
                         arq << std::to_string(cl[i]->getEmp(1).getPrazo()) + "\n";
+                        arq << "*\n";
                     }
                 }
 
