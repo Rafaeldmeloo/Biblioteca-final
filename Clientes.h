@@ -7,9 +7,10 @@ class Clientes
         Clientes();
         virtual ~Clientes();
 
-        virtual void AdicionaEmprestimo(Emprestimo emp) = 0;
+        virtual bool getVip() = 0;
+        virtual void AdicionaEmprestimo(Emprestimo emp, int data) = 0;
         virtual void setEmp(Emprestimo emp) = 0;
-        virtual Emprestimo getEmp() = 0;
+        virtual Emprestimo getEmp(int op) = 0;
         virtual void AtualizaPrazo() = 0;
         virtual void MostrarLista() = 0;
         virtual int ExcluirEmprestimo(std::string procuraL, std::string procuraN) = 0;

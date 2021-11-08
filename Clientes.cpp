@@ -17,7 +17,7 @@ Clientes::~Clientes()
     //dtor
 }
 
-void Clientes::AdicionaEmprestimo(Emprestimo emp){
+void Clientes::AdicionaEmprestimo(Emprestimo emp, int data){
 
 }
 
@@ -25,7 +25,7 @@ void Clientes::setEmp(Emprestimo emp){
 
 }
 
-Emprestimo Clientes::getEmp(){
+Emprestimo Clientes::getEmp(int op){
 
 }
 

@@ -3,17 +3,23 @@
 #include "ClienteVip.h"
 #include "ClienteNormal.h"
 #include "Controle.h"
+#include "BancoDeDados.h"
 #include <iostream>
 #include <locale.h>
 #include <iomanip>
 #include <vector>
+#include <fstream>
+
+#define PRAZO_VIP 60
 
 int main(){
+    std::fstream arq;
     Controle ctl;
-    std::string livros, nomes;
+    std::string livros, nomes, datas;
     Emprestimo emp;
     std::vector<Clientes*> cl;
     Clientes *cls;
+    BancoDeDados bdd;
     int opcao = 0;
     int loop = 1;
     int vip;
@@ -22,6 +28,51 @@ int main(){
     int valorEdita;
 
     setlocale(LC_ALL, "Portuguese");
+
+    arq.open("EmprestimoNormal.txt", std::ios::in);
+
+    do{
+        std::getline(arq, nomes);
+        if(nomes != "*"){
+            cls = new Cliente::ClienteVip();
+
+            std::getline(arq, livros);
+            emp = Emprestimo(livros, nomes);
+            cls->AdicionaEmprestimo(emp,PRAZO_VIP);
+
+            std::getline(arq, livros);
+            emp = Emprestimo(livros, nomes);
+            std::getline(arq, datas);
+
+            cls->AdicionaEmprestimo(emp, stoi(datas));
+
+            cl.push_back(cls);
+        }
+    }while(nomes != "*");
+
+    while(!arq.eof()){
+        std::getline(arq, nomes);
+        if(nomes != ""){
+            std::getline(arq, livros);
+            std::getline(arq, datas);
+
+            emp.setNomes(nomes);
+            emp.setLivros(livros);
+            emp.setPrazo(stoi(datas));
+
+            cls = new Cliente::ClienteNormal();
+
+            cls->AdicionaEmprestimo(emp, PRAZO_VIP);
+
+            cl.push_back(cls);
+        }
+    }
+
+
+    arq.close();
+
+
+
     while(1){
         ctl.menuPrincipal();
 
@@ -30,8 +81,41 @@ int main(){
 
         switch(opcao){
             case 1:
-                std::cout << "calmaê\n\n";
-                system("pause");
+                loop = 1;
+                while(loop){
+                    system("cls");
+                    ctl.menuBancoDeDados();
+                    std::cin >> opcao;
+                    std::cin.ignore();
+
+                    switch(opcao){
+                        case 1:
+                            system("cls");
+                            bdd.addLivro();
+                            break;
+
+                        case 2:
+                            system("cls");
+                            bdd.removeLivro();
+                            system("cls");
+                            break;
+
+                        case 3:
+                            system("cls");
+                            bdd.mostraBanco();
+                            break;
+
+                        case 4:
+                            loop = 0;
+                            break;
+
+                        default:
+                            system("cls");
+                            std::cout << "*****Opcao Invalida*****" << std::endl;
+                            system("pause");
+                            break;
+                    }
+                }
                 system("cls");
                 break;
 
@@ -60,7 +144,7 @@ int main(){
                 std::getline(std::cin, livros);
 
                 emp = Emprestimo(livros, nomes);
-                cls->AdicionaEmprestimo(emp);
+                cls->AdicionaEmprestimo(emp, PRAZO_VIP);
                 if(vip == 1){
                     std::cout << "\nDeseja adicionar outro empréstimo?\n"
                                 "1 - Sim\n"
@@ -73,13 +157,21 @@ int main(){
                         std::cout << "Nome do livro: ";
                         std::getline(std::cin, livros);
                         emp = Emprestimo(livros, nomes);
-                        cls->AdicionaEmprestimo(emp);
+                        cls->AdicionaEmprestimo(emp, PRAZO_VIP);
+
+                        std::cout << std::endl;
+                        std::cout << "----Empréstimo adicionado com sucesso----\n" << std::endl;
                         system("pause");
                         system("cls");
                     } else {
+                        std::cout << std::endl;
+                        std::cout << "----Empréstimo adicionado com sucesso----\n" << std::endl;
+                        system("pause");
                         system("cls");
                     }
                 } else {
+                    std::cout << std::endl;
+                    std::cout << "----Empréstimo adicionado com sucesso----\n" << std::endl;
                     system("pause");
                     system("cls");
                 }
@@ -92,6 +184,7 @@ int main(){
                 for(int i = 0; i < cl.size(); i++){
                     cl[i]->AtualizaPrazo();
                 }
+
                 std::cout << std::endl;
                 std::cout << "----Prazos atualizados com sucesso----\n" << std::endl;
                 system("pause");
@@ -113,68 +206,98 @@ int main(){
                 break;
 
             case 5:
-                system("cls");
-                loop = 1;
-                while(loop){
-                    switch(cl[0]->opcaoEditar()){
-                        case 1:
-                            std::cout << "Digite o nome do cliente: ";
-                            std::getline(std::cin, procuraN);
-                            std::cout << "Digite o nome do livro: ";
-                            std::getline(std::cin, procuraL);
+                if(cl.size() != 0){
+                    system("cls");
+                    loop = 1;
+                    while(loop){
+                        switch(cl[0]->opcaoEditar()){
+                            case 1:
+                                std::cout << "Digite o nome do cliente: ";
+                                std::getline(std::cin, procuraN);
+                                std::cout << "Digite o nome do livro: ";
+                                std::getline(std::cin, procuraL);
 
-                            valorEdita = 0;
-                            for(int i = 0; i < cl.size(); i++){
-                                valorEdita = cl[i]->ExcluirEmprestimo(procuraL, procuraN);
-                                if(valorEdita == 1){
-                                    cl.erase(cl.begin()+i);
-                                    std::cout << std::endl;
-                                    std::cout << "----Empréstimo excluído com sucesso----" << std::endl;
-                                    break;
+                                valorEdita = 0;
+                                for(int i = 0; i < cl.size(); i++){
+                                    valorEdita = cl[i]->ExcluirEmprestimo(procuraL, procuraN);
+                                    if(valorEdita == 1){
+                                        cl.erase(cl.begin()+i);
+                                        std::cout << std::endl;
+                                        std::cout << "----Empréstimo excluído com sucesso----" << std::endl;
+                                        break;
+                                    }
+                                    if(valorEdita == 2){
+                                        break;
+                                    }
+                                    if(cl.size() - i == 1){
+                                        std::cout << "Empréstimo não encontrado" << std::endl;
+                                    }
                                 }
-                                if(valorEdita == 2){
-                                    break;
+                                system("pause");
+                                system("cls");
+                                break;
+
+                            case 2:
+
+                                std::cout << "Digite o nome do cliente: ";
+                                std::getline(std::cin, procuraN);
+                                std::cout << "Digite o nome do livro: ";
+                                std::getline(std::cin, procuraL);
+
+                                for(int i = 0; i < cl.size(); i++){
+                                    if(cl[i]->AlterarEmprestimo(procuraL, procuraN) == true)
+                                        break;
+                                    if(cl.size() - i == 1){
+                                        std::cout << "Empréstimo não encontrado\n" << std::endl;
+                                    }
                                 }
-                                if(cl.size() - i == 1){
-                                    std::cout << "Empréstimo não encontrado" << std::endl;
-                                }
-                            }
-                            system("pause");
-                            system("cls");
-                            break;
+                                system("pause");
+                                system("cls");
+                                break;
 
-                        case 2:
+                            case 3:
+                                loop = 0;
+                                system("cls");
+                                break;
 
-                            std::cout << "Digite o nome do cliente: ";
-                            std::getline(std::cin, procuraN);
-                            std::cout << "Digite o nome do livro: ";
-                            std::getline(std::cin, procuraL);
-
-                            for(int i = 0; i < cl.size(); i++){
-                                if(cl[i]->AlterarEmprestimo(procuraL, procuraN) == true)
-                                    break;
-                                if(cl.size() - i == 1){
-                                    std::cout << "Empréstimo não encontrado\n" << std::endl;
-                                }
-                            }
-                            system("pause");
-                            system("cls");
-                            break;
-
-                        case 3:
-                            loop = 0;
-                            system("cls");
-                            break;
-
-                        default:
-                            std::cout << "*****Opção inválida*****\n" << std::endl;
-                            system("pause");
-                            system("cls");
+                            default:
+                                std::cout << "*****Opção inválida*****\n" << std::endl;
+                                system("pause");
+                                system("cls");
+                        }
                     }
+                }else{
+                    std::cout << "Ainda não há nenhum empréstimo.\n" << std::endl;
+                    system("pause");
+                    system("cls");
                 }
+
             break;
 
             case 6:
+
+                arq.open("EmprestimoNormal.txt", std::ios::out);
+
+                for(int i = 0; i < cl.size(); i++){
+                    if(cl[i]->getVip() == true){
+                        arq << cl[i]->getEmp(1).getNomes() + "\n";
+                        arq << cl[i]->getEmp(1).getLivros() + "\n";
+                        arq << cl[i]->getEmp(2).getLivros() + "\n";
+                        arq << std::to_string(cl[i]->getEmp(1).getPrazo()) + "\n";
+                    }
+                }
+                arq << "*\n";
+
+                for(int i = 0; i < cl.size(); i++){
+                    if(cl[i]->getVip() == false){
+                        arq << cl[i]->getEmp(1).getNomes() + "\n";
+                        arq << cl[i]->getEmp(1).getLivros() + "\n";
+                        arq << std::to_string(cl[i]->getEmp(1).getPrazo()) + "\n";
+                    }
+                }
+
+                arq.close();
+
                 for(int i = 0; i < cl.size(); i++){
                     delete cl[i];
                 }

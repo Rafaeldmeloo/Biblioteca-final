@@ -29,3 +29,14 @@ void Controle::menuPrincipal(){
                 "6 - Sair do programa\n" << std::endl;
 
 }
+
+void Controle::menuBancoDeDados(){
+    std::cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n"
+                "              Menu do Banco de Dados\n"
+                "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n" << std::endl;
+    std::cout << "--------Escolha operação--------\n" << std::endl
+              << "1 - Adicionar livro no banco de dados" << std::endl
+              << "2 - Retirar livro do banco de dados" << std::endl
+              << "3 - Mostrar banco de dados" << std::endl
+              << "4 - Voltar" << std::endl;
+}

@@ -8,6 +8,7 @@ class Controle
         Controle();
         virtual ~Controle();
         void menuPrincipal();
+        void menuBancoDeDados();
 
     protected:
 

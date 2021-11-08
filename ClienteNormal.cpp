@@ -1,6 +1,9 @@
 #include <iostream>
+#include <string>
 #include <iomanip>
 #include <locale.h>
+#include <fstream>
+#include <vector>
 #include "Clientes.h"
 #include "ClienteNormal.h"
 #include "Emprestimo.h"
@@ -22,22 +25,20 @@ bool ClienteNormal::getVip(){
     return false;
 }
 
-void ClienteNormal::AdicionaEmprestimo(Emprestimo emp){
-        std::cout << std::endl;
-        std::cout << "----Empréstimo adicionado com sucesso----\n" << std::endl;
+void ClienteNormal::AdicionaEmprestimo(Emprestimo emp, int data){
         emprestimo = emp;
-
 }
 
 void ClienteNormal::setEmp(Emprestimo emp){
     emprestimo = emp;
 }
 
-Emprestimo ClienteNormal::getEmp(){
+Emprestimo ClienteNormal::getEmp(int op){
     return emprestimo;
 }
 
 void ClienteNormal::AtualizaPrazo(){
+
     emprestimo.setPrazo(emprestimo.getPrazo() - 1);
 }
 

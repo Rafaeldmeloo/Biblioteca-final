@@ -1,5 +1,6 @@
 #pragma once
 #include "Emprestimo.h"
+#include <vector>
 
 namespace Cliente{
 class ClienteVip:public Clientes
@@ -9,9 +10,9 @@ class ClienteVip:public Clientes
         virtual ~ClienteVip();
 
         bool getVip();
-        void AdicionaEmprestimo(Emprestimo emp);
+        void AdicionaEmprestimo(Emprestimo emp, int data);
         void setEmp(Emprestimo emp);
-        Emprestimo getEmp();
+        Emprestimo getEmp(int op);
         void AtualizaPrazo();
         void MostrarLista();
         int ExcluirEmprestimo(std::string procuraL, std::string procuraN);
@@ -23,6 +24,6 @@ class ClienteVip:public Clientes
     protected:
 
     private:
-        Emprestimo emprestimo, emprestimo2;
+        std::vector<Emprestimo> emprestimos;
 };
 }
