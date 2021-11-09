@@ -54,7 +54,7 @@ void ClienteVip::MostrarLista(){
         std::cout << "Nome: " << emprestimos[0].getNomes() << std::endl;
         std::cout << "Livro(s): " << std::endl;
         std::cout << "  " + emprestimos[0].getLivros() << std::endl;
-        if(emprestimos.size() == 2)
+        if(emprestimos.size() == 2 && emprestimos[1].getLivros() != "/")
             std::cout << "  " + emprestimos[1].getLivros() << std::endl;
 
         if(emprestimos[0].getPrazo() >= 0){
@@ -96,9 +96,12 @@ int ClienteVip::ExcluirEmprestimo(std::string procuraL, std::string procuraN){
             if(op == 2)
                 return 2;
             else{
-                emprestimos.erase(emprestimos.begin()+i);
+                if(i != 1)
+                    emprestimos.erase(emprestimos.begin()+i);
+                else
+                    emprestimos[1].setLivros("/");
 
-                if(emprestimos.size() == 0)
+                if(emprestimos.size() == 0 || emprestimos[0].getLivros() == "/")
                     return 1;
                 else
                     return 2;

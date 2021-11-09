@@ -54,6 +54,22 @@ int main(){
                 cls->AdicionaEmprestimo(emp, PRAZO_VIP);
 
                 cl.push_back(cls);
+            }else if(sArq4 == "/"){
+                cls = new Cliente::ClienteVip();
+
+                //sArq1 = nome
+                //sArq2 = emprestimo
+                //sArq3 = Prazo
+                //sArq4 = /
+
+                emp = Emprestimo(sArq2, sArq1);
+                cls->AdicionaEmprestimo(emp,stoi(sArq3));
+
+                emp = Emprestimo("/", sArq1);
+                cls->AdicionaEmprestimo(emp,stoi(sArq3));
+
+                cl.push_back(cls);
+
             }else{
                 cls = new Cliente::ClienteVip();
 
@@ -290,12 +306,18 @@ int main(){
                         arq << cl[i]->getEmp(1).getNomes() + "\n";
                         arq << cl[i]->getEmp(1).getLivros() + "\n";
                         arq << std::to_string(cl[i]->getEmp(1).getPrazo()) + "\n";
-                        arq << cl[i]->getEmp(2).getLivros() + "\n";
 
-
+                        if(cl[i]->getEmp(1).getLivros() != cl[i]->getEmp(2).getLivros() && cl[i]->getEmp(2).getLivros() != "/"){
+                            arq << cl[i]->getEmp(2).getLivros() + "\n";
+                            std::cout << "oi1\n";
+                        }else{
+                            arq << "/\n";
+                        std::cout << "oi2\n";
+                        }
+                        std::cout << "oi3\n";
                     }
                 }
-
+                std::cout << "oi4\n";
                 for(int i = 0; i < cl.size(); i++){
                     if(cl[i]->getVip() == false){
                         arq << cl[i]->getEmp(1).getNomes() + "\n";

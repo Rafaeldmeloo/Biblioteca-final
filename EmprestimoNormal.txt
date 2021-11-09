@@ -1,16 +1,16 @@
 jp
 livro a
-9
-livro b
+8
+/
 rafael
-livro d
-58
-livro e
+livro z
+60
+/
 virgilio
 livro c
-10
+9
 *
 mane
 livro f
-29
+28
 *

@@ -7,6 +7,9 @@
 class BancoDeDados{
     public:
         BancoDeDados();
+        ///a fazer
+        void entregaLivro(std::string livro);
+        void devolveLivro(std::string livro);
 
         void addLivro();
         void removeLivro();

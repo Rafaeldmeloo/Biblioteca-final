@@ -5,6 +5,20 @@
 BancoDeDados::BancoDeDados(){
 }
 
+void BancoDeDados::entregaLivro(std::string livro){
+
+}
+
+void BancoDeDados::devolveLivro(std::string livro){
+    std::ofstream arq;
+
+    arq.open("BancoDeDados.txt", std::ios::app);
+
+    arq << livro + "\n";
+
+    arq.close();
+}
+
 void BancoDeDados::addLivro(){
     setlocale(LC_ALL, "Portuguese");
 
