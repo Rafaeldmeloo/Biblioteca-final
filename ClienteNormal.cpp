@@ -29,7 +29,7 @@ void ClienteNormal::AdicionaEmprestimo(Emprestimo emp, int data){
         emprestimo = emp;
 }
 
-void ClienteNormal::setEmp(Emprestimo emp){
+void ClienteNormal::setEmp(Emprestimo emp, int op){
     emprestimo = emp;
 }
 
@@ -92,8 +92,9 @@ int ClienteNormal::ExcluirEmprestimo(std::string procuraL, std::string procuraN)
     getchar();
 
     if(op == 2)
-        return 2;
-    return 1;
+        return 4;
+
+    return 5;
 }
 
 bool ClienteNormal::AlterarEmprestimo(std::string procuraL, std::string procuraN){
@@ -122,43 +123,45 @@ bool ClienteNormal::AlterarEmprestimo(std::string procuraL, std::string procuraN
           }
           std:: cout << std::endl;
 
-        std::cout << "-------O que deseja alterar?-------" << std::endl;
-        std::cout << "1 - Nome do livro\n"
-                     "2 - Nome do cliente\n"
-                     "3 - Prazo de entrega\n"
-                     "4 - Cancelar alteração" << std::endl;
-        int op = 0;
-        std::cin >> op;
-        getchar();
-
-        switch(op){
-          case 1:
-            std::cout << "Digite o novo nome do livro: ";
-            std::getline(std::cin, nvLivro);
-            emprestimo.setLivros(nvLivro);
-            std::cout << std::endl;
-            std::cout << "----Nome do livro alterado com sucesso----" << std::endl;
-            return true;
-
-          case 2:
-            std::cout << "Digite o novo nome do cliente: ";
-            std::getline(std::cin, nvNome);
-            emprestimo.setNomes(nvNome);
-            std::cout << std::endl;
-            std::cout << "----Nome do cliente alterado com sucesso----" << std::endl;
-            return true;
-
-          case 3:
-            std::cout << "Digite o novo prazo: ";
-            std::cin >> nvPrazo;
+        while(1)
+        {
+            std::cout << "-------O que deseja alterar?-------" << std::endl;
+            std::cout << "1 - Nome do cliente\n"
+                         "2 - Prazo de entrega\n"
+                         "3 - Cancelar alteração" << std::endl;
+            int op = 0;
+            std::cin >> op;
             getchar();
-            emprestimo.setPrazo(nvPrazo);
-            std::cout << std::endl;
-            std::cout << "----Prazo alterado com sucesso----" << std::endl;
-            return true;
 
-          case 4:
-            return true;
+            switch(op){
+              case 1:
+                std::cout << "Digite o novo nome do cliente: ";
+                std::getline(std::cin, nvNome);
+                emprestimo.setNomes(nvNome);
+                std::cout << std::endl;
+                std::cout << "----Nome do cliente alterado com sucesso----" << std::endl;
+                return true;
+
+              case 2:
+                std::cout << "Digite o novo prazo: ";
+                std::cin >> nvPrazo;
+                getchar();
+                emprestimo.setPrazo(nvPrazo);
+                std::cout << std::endl;
+                std::cout << "----Prazo alterado com sucesso----" << std::endl;
+                return true;
+
+              case 3:
+                return true;
+
+              default :
+                std::cout << std::endl;
+                std::cout << "----Opção inválida----" << std::endl;
+                system("pause");
+                system("cls");
+                break;
+
+            }
         }
 }
 

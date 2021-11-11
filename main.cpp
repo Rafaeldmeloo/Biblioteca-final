@@ -24,6 +24,7 @@ int main(){
     int opcao = 0;
     int loop = 1;
     int vip;
+    std::string lvr;
 
     std::string procuraL, procuraN;
     int valorEdita;
@@ -89,12 +90,7 @@ int main(){
         }
     }
 
-
-
-
     arq.close();
-
-
 
     while(1){
         ctl.menuPrincipal();
@@ -166,33 +162,53 @@ int main(){
                 std::cout << "Nome do livro: ";
                 std::getline(std::cin, livros);
 
-                emp = Emprestimo(livros, nomes);
+                lvr = bdd.entregaLivro(livros);
+                if(lvr == "0"){
+                    system("pause");
+                    system("cls");
+                    break;
+                }
+                emp = Emprestimo(lvr, nomes);
                 cls->AdicionaEmprestimo(emp, PRAZO_VIP);
-                if(vip == 1){
+
+                if(vip == 1)
+                {
                     std::cout << "\nDeseja adicionar outro empréstimo?\n"
                                 "1 - Sim\n"
                                 "2 - Não\n";
                     std::cin >> vip;
                     getchar();
 
-                    if(vip == 1){
+                    if(vip == 1)
+                    {
                         std::cout << std::endl;
                         std::cout << "Nome do livro: ";
                         std::getline(std::cin, livros);
-                        emp = Emprestimo(livros, nomes);
+
+                        lvr = bdd.entregaLivro(livros);
+                        if(lvr == "0"){
+                            system("pause");
+                            system("cls");
+                            break;
+                        }
+
+                        emp = Emprestimo(lvr, nomes);
                         cls->AdicionaEmprestimo(emp, PRAZO_VIP);
 
                         std::cout << std::endl;
                         std::cout << "----Empréstimo adicionado com sucesso----\n" << std::endl;
                         system("pause");
                         system("cls");
+
                     } else {
+                        emp = Emprestimo("/", nomes);
+                        cls->AdicionaEmprestimo(emp, PRAZO_VIP);
                         std::cout << std::endl;
                         std::cout << "----Empréstimo adicionado com sucesso----\n" << std::endl;
                         system("pause");
                         system("cls");
                     }
-                } else {
+                }else{
                     std::cout << std::endl;
                     std::cout << "----Empréstimo adicionado com sucesso----\n" << std::endl;
                     system("pause");
@@ -243,13 +259,38 @@ int main(){
                                 valorEdita = 0;
                                 for(int i = 0; i < cl.size(); i++){
                                     valorEdita = cl[i]->ExcluirEmprestimo(procuraL, procuraN);
-                                    if(valorEdita == 1){
-                                        cl.erase(cl.begin()+i);
+                                    if(valorEdita == 2){ //exclui o segundo
+                                        bdd.devolveLivro(cl[i]->getEmp(2).getLivros());
+                                        emp = Emprestimo("/", cl[i]->getEmp(2).getNomes());
+                                        cl[i]->setEmp(emp, 2);
+                                        if(cl[i]->ExcluirEmprestimo(procuraL, procuraN) == 1){
+                                            cl.erase(cl.begin()+i);
+                                        }
+
                                         std::cout << std::endl;
                                         std::cout << "----Empréstimo excluído com sucesso----" << std::endl;
                                         break;
                                     }
-                                    if(valorEdita == 2){
+                                    if(valorEdita == 3){ //exclui o primeiro
+                                        bdd.devolveLivro(cl[i]->getEmp(1).getLivros());
+                                        emp = Emprestimo("/", cl[i]->getEmp(1).getNomes());
+                                        cl[i]->setEmp(emp, 1);
+                                        if(cl[i]->ExcluirEmprestimo(procuraL, procuraN) == 1){
+                                            cl.erase(cl.begin()+i);
+                                        }
+
+                                        std::cout << std::endl;
+                                        std::cout << "----Empréstimo excluído com sucesso----" << std::endl;
+                                        break;
+                                    }
+                                    if(valorEdita == 4){
+                                        break;
+                                    }
+                                    if(valorEdita == 5){
+                                        bdd.devolveLivro(cl[i]->getEmp(1).getLivros());
+                                        cl.erase(cl.begin()+i);
+                                        std::cout << std::endl;
+                                        std::cout << "----Empréstimo excluído com sucesso----" << std::endl;
                                         break;
                                     }
                                     if(cl.size() - i == 1){
@@ -309,15 +350,11 @@ int main(){
 
                         if(cl[i]->getEmp(1).getLivros() != cl[i]->getEmp(2).getLivros() && cl[i]->getEmp(2).getLivros() != "/"){
                             arq << cl[i]->getEmp(2).getLivros() + "\n";
-                            std::cout << "oi1\n";
                         }else{
                             arq << "/\n";
-                        std::cout << "oi2\n";
                         }
-                        std::cout << "oi3\n";
                     }
                 }
-                std::cout << "oi4\n";
                 for(int i = 0; i < cl.size(); i++){
                     if(cl[i]->getVip() == false){
                         arq << cl[i]->getEmp(1).getNomes() + "\n";
